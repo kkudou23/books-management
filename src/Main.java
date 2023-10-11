@@ -144,29 +144,42 @@ public class Main {
     }
     //    ---------- ここまで「検索」 ----------
 
-    //    ---------- ここから「追加」 ----------
+    //    ---------- ここから「追加」と「編集」と「削除」 ----------
     private static void add() {
         System.out.println("\n" + "追加したい書籍の情報を入力してください。");
         System.out.println("--------------------");
-        System.out.print("ID : ");
-        id = Integer.parseInt(sc.nextLine());
-        System.out.print("タイトル : ");
-        title = sc.nextLine();
-        System.out.print("著者 : ");
-        author = sc.nextLine();
-        int r = BookDAO.insert(id, title, author);
-        if (r != 0) {
-            System.out.println("--------------------");
-            System.out.println("書籍の追加に成功しました。");
-            result_lbb = BookDAO.selectAll_id();
-            System.out.println("現在" + result_lbb.size() + "件のデータが登録されています。" + "\n");
-        } else {
-            System.out.println("データの追加に失敗しました。" + "\n");
+        try {
+            System.out.print("ID : ");
+            id = Integer.parseInt(sc.nextLine());
+
+            System.out.print("タイトル : ");
+            title = sc.nextLine();
+            if(title.equals("")) {
+                throw new EmptyInput();
+            }
+
+            System.out.print("著者 : ");
+            author = sc.nextLine();
+            if(author.equals("")) {
+                throw new EmptyInput();
+            }
+
+            int r = BookDAO.insert(id, title, author);
+            if (r != 0) {
+                System.out.println("--------------------");
+                System.out.println("書籍の追加に成功しました。");
+                result_lbb = BookDAO.selectAll_id();
+                System.out.println("現在" + result_lbb.size() + "件のデータが登録されています。" + "\n");
+            } else {
+                System.out.println("データの追加に失敗しました。" + "\n");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("数字を入力してください。" + "\n");
+        } catch (EmptyInput e) {
+            System.out.println("文字を入力してください。" + "\n");
         }
     }
-    //    ---------- ここまで「追加」 ----------
 
-    //    ---------- ここから「編集」と「削除」 ----------
     public static void update() {
         System.out.println("\n" + "編集したい書籍のIDを入力してください。");
         System.out.print(">> ");
@@ -181,13 +194,25 @@ public class Main {
                 System.out.println("\n" + "新しい書籍の情報を入力してください。");
                 System.out.println("--------------------");
                 System.out.println("ID : " + id);
-                System.out.print("タイトル : ");
-                title = sc.nextLine();
-                System.out.print("著者 : ");
-                author = sc.nextLine();
-                BookDAO.update(id, title, author);
-                System.out.println("--------------------");
-                System.out.println("データの編集に成功しました。" + "\n");
+
+                try {
+                    System.out.print("タイトル : ");
+                    title = sc.nextLine();
+                    if(title.equals("")) {
+                        throw new EmptyInput();
+                    }
+
+                    System.out.print("著者 : ");
+                    author = sc.nextLine();
+                    if(author.equals("")) {
+                        throw new EmptyInput();
+                    }
+                    BookDAO.update(id, title, author);
+                    System.out.println("--------------------");
+                    System.out.println("データの編集に成功しました。" + "\n");
+                } catch (EmptyInput e) {
+                    System.out.println("文字を入力してください。" + "\n");
+                }
 
             } else if (answer.equals("no")) {
                 System.out.println("編集処理を中止しました。" + "\n");
@@ -233,5 +258,11 @@ public class Main {
         System.out.print(">> ");
         return sc.nextLine();
     }
-    //    ---------- ここまで「編集」と「削除」 ----------
+
+    public static class EmptyInput extends Exception{
+        EmptyInput() {
+            super();
+        }
+    }
+    //    ---------- ここまで「追加」と「編集」と「削除」 ----------
 }
