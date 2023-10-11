@@ -87,42 +87,28 @@ public class Main {
     //    ---------- ここから「検索」 ----------
     private static void search() {
         System.out.println("\n" + "検索方法を選んでください。");
-        System.out.println("(1:ID一致 2:タイトルあいまい 3:著者あいまい 4:タイトル・著者あいまい)");
+        System.out.println("(1:ID一致 2:タイトル・著者あいまい)");
         System.out.print(">> ");
         int how = Integer.parseInt(sc.nextLine());
         switch (how) {
             case 1 -> search_id();
-            case 2 -> search_title();
-            case 3 -> search_author();
-            case 4 -> search_two();
+            case 2 -> search_TnA();
             default -> System.out.println("1~3の操作の中から選択してください。" + "\n");
         }
     }
 
     private static void search_id() {
-        System.out.println("\n" + "検索する書籍のIDを入力してください。");
-        System.out.print(">> ");
+        System.out.println("\n" + "検索する書籍の情報を入力してください。");
+        System.out.println("--------------------");
+        System.out.print("ID : ");
         id = Integer.parseInt(sc.nextLine());
         result = BookDAO.selectById(id);
         showSearchResult_id(result);
     }
 
-    private static void search_title() {
-        System.out.println("\n" + "検索するワードを入力してください。");
-        System.out.print(">> ");
-        result_lbb = BookDAO.selectLikeTitle(sc.nextLine());
-        showSearchResult_else(result_lbb);
-    }
-
-    private static void search_author() {
-        System.out.println("\n" + "検索するワードを入力してください。");
-        System.out.print(">> ");
-        result_lbb = BookDAO.selectLikeAuthor(sc.nextLine());
-        showSearchResult_else(result_lbb);
-    }
-
-    private static void search_two() {
-        System.out.println("\n" + "検索するワードを入力してください。");
+    private static void search_TnA() {
+        System.out.println("\n" + "検索する書籍の情報を入力してください(空欄可)。");
+        System.out.println("--------------------");
         System.out.print("タイトル : ");
         title = sc.nextLine();
         System.out.print("著者 : ");

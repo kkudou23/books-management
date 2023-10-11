@@ -60,56 +60,6 @@ public class BookDAO {
         return result;
     }
 
-    public static ArrayList<BookBean> selectLikeTitle(String title) {
-        String sql = "SELECT * FROM books WHERE title LIKE ?";
-        results_albb = new ArrayList<>();
-
-        try (Connection con = DriverManager.getConnection(db_url); PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, "%" + title + "%");
-
-            try(ResultSet rs = ps.executeQuery()) {
-                while(rs.next()) {
-                    results_albb.add(
-                            new BookBean(
-                                    rs.getInt("id"),
-                                    rs.getString("title"),
-                                    rs.getString("author")
-                            )
-                    );
-                }
-            }
-        } catch (SQLException e) {
-            System.out.println("SQLの実行に失敗しました。");
-            e.printStackTrace();
-        }
-        return results_albb;
-    }
-
-    public static ArrayList<BookBean> selectLikeAuthor(String author) {
-        String sql = "SELECT * FROM books WHERE author LIKE ?";
-        results_albb = new ArrayList<>();
-
-        try (Connection con = DriverManager.getConnection(db_url); PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, "%" + author + "%");
-
-            try(ResultSet rs = ps.executeQuery()) {
-                while(rs.next()) {
-                    results_albb.add(
-                            new BookBean(
-                                    rs.getInt("id"),
-                                    rs.getString("title"),
-                                    rs.getString("author")
-                            )
-                    );
-                }
-            }
-        } catch (SQLException e) {
-            System.out.println("SQLの実行に失敗しました。");
-            e.printStackTrace();
-        }
-        return results_albb;
-    }
-
     public static ArrayList<BookBean> selectLikeTnA(String title, String author) {
         String sql = "SELECT * FROM books WHERE title LIKE ? AND author LIKE ?";
         results_albb = new ArrayList<>();
