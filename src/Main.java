@@ -43,12 +43,16 @@ public class Main {
         System.out.println("\n" + "表示方法を選んでください。");
         System.out.println("(1:ID順 2:タイトル順 3:著者順)");
         System.out.print(">> ");
-        int how = Integer.parseInt(sc.nextLine());
-        switch (how) {
-            case 1 -> all_id();
-            case 2 -> all_title();
-            case 3 -> all_author();
-            default -> System.out.println("1~3の操作の中から選択してください。" + "\n");
+        try {
+            int how = Integer.parseInt(sc.nextLine());
+            switch (how) {
+                case 1 -> all_id();
+                case 2 -> all_title();
+                case 3 -> all_author();
+                default -> System.out.println("1~3の操作の中から選択してください。" + "\n");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("数字を入力してください。" + "\n");
         }
     }
     private static void all_id() {
@@ -89,11 +93,15 @@ public class Main {
         System.out.println("\n" + "検索方法を選んでください。");
         System.out.println("(1:ID一致 2:タイトル・著者あいまい)");
         System.out.print(">> ");
-        int how = Integer.parseInt(sc.nextLine());
-        switch (how) {
-            case 1 -> search_id();
-            case 2 -> search_TnA();
-            default -> System.out.println("1~3の操作の中から選択してください。" + "\n");
+        try {
+            int how = Integer.parseInt(sc.nextLine());
+            switch (how) {
+                case 1 -> search_id();
+                case 2 -> search_TnA();
+                default -> System.out.println("1~3の操作の中から選択してください。" + "\n");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("数字を入力してください。" + "\n");
         }
     }
 
@@ -183,70 +191,78 @@ public class Main {
     public static void update() {
         System.out.println("\n" + "編集したい書籍のIDを入力してください。");
         System.out.print(">> ");
-        id = Integer.parseInt(sc.nextLine());
-        result = BookDAO.selectById(id);
-        if (result != null) {
-            System.out.println("\n" + "このデータを編集しますか？(yes/no)");
-            System.out.println("※IDを編集したい場合は、一度該当データを削除した後に作り直してください。");
-            String answer = dataCheck();
-            if (answer.equals("yes")) {
+        try {
+            id = Integer.parseInt(sc.nextLine());
+            result = BookDAO.selectById(id);
+            if (result != null) {
+                System.out.println("\n" + "このデータを編集しますか？(yes/no)");
+                System.out.println("※IDを編集したい場合は、一度該当データを削除した後に作り直してください。");
+                String answer = dataCheck();
+                if (answer.equals("yes")) {
 
-                System.out.println("\n" + "新しい書籍の情報を入力してください。");
-                System.out.println("--------------------");
-                System.out.println("ID : " + id);
-
-                try {
-                    System.out.print("タイトル : ");
-                    title = sc.nextLine();
-                    if(title.equals("")) {
-                        throw new EmptyInput();
-                    }
-
-                    System.out.print("著者 : ");
-                    author = sc.nextLine();
-                    if(author.equals("")) {
-                        throw new EmptyInput();
-                    }
-                    BookDAO.update(id, title, author);
+                    System.out.println("\n" + "新しい書籍の情報を入力してください。");
                     System.out.println("--------------------");
-                    System.out.println("データの編集に成功しました。" + "\n");
-                } catch (EmptyInput e) {
-                    System.out.println("文字を入力してください。" + "\n");
-                }
+                    System.out.println("ID : " + id);
 
-            } else if (answer.equals("no")) {
-                System.out.println("編集処理を中止しました。" + "\n");
+                    try {
+                        System.out.print("タイトル : ");
+                        title = sc.nextLine();
+                        if(title.equals("")) {
+                            throw new EmptyInput();
+                        }
+
+                        System.out.print("著者 : ");
+                        author = sc.nextLine();
+                        if(author.equals("")) {
+                            throw new EmptyInput();
+                        }
+                        BookDAO.update(id, title, author);
+                        System.out.println("--------------------");
+                        System.out.println("データの編集に成功しました。" + "\n");
+                    } catch (EmptyInput e) {
+                        System.out.println("文字を入力してください。" + "\n");
+                    }
+
+                } else if (answer.equals("no")) {
+                    System.out.println("編集処理を中止しました。" + "\n");
+                } else {
+                    System.out.println("yesまたはnoを入力してください。" + "\n");
+                }
             } else {
-                System.out.println("yesまたはnoを入力してください。" + "\n");
+                System.out.println("指定された書籍は見つかりませんでした。" + "\n");
             }
-        } else {
-            System.out.println("指定された書籍は見つかりませんでした。" + "\n");
+        } catch (NumberFormatException e) {
+            System.out.println("数字を入力してください。" + "\n");
         }
     }
     public static void delete() {
         System.out.println("\n" + "削除したい書籍のIDを入力してください。");
         System.out.print(">> ");
-        id = Integer.parseInt(sc.nextLine());
-        result = BookDAO.selectById(id);
-        if (result != null) {
-            System.out.println("\n" + "このデータを削除しますか？(yes/no)");
-            String answer = dataCheck();
-            if (answer.equals("yes")) {
-                int r = BookDAO.delete(id);
-                if (r != 0) {
-                    System.out.println("書籍の削除に成功しました。");
-                    result_lbb = BookDAO.selectAll_id();
-                    System.out.println("現在" + result_lbb.size() + "件のデータが登録されています。" + "\n");
+        try {
+            id = Integer.parseInt(sc.nextLine());
+            result = BookDAO.selectById(id);
+            if (result != null) {
+                System.out.println("\n" + "このデータを削除しますか？(yes/no)");
+                String answer = dataCheck();
+                if (answer.equals("yes")) {
+                    int r = BookDAO.delete(id);
+                    if (r != 0) {
+                        System.out.println("書籍の削除に成功しました。");
+                        result_lbb = BookDAO.selectAll_id();
+                        System.out.println("現在" + result_lbb.size() + "件のデータが登録されています。" + "\n");
+                    } else {
+                        System.out.println("書籍の削除に失敗しました。" + "\n");
+                    }
+                } else if (answer.equals("no")) {
+                    System.out.println("削除処理を中止しました。" + "\n");
                 } else {
-                    System.out.println("書籍の削除に失敗しました。" + "\n");
+                    System.out.println("yesまたはnoを入力してください。" + "\n");
                 }
-            } else if (answer.equals("no")) {
-                System.out.println("削除処理を中止しました。" + "\n");
             } else {
-                System.out.println("yesまたはnoを入力してください。" + "\n");
+                System.out.println("指定された書籍は見つかりませんでした。" + "\n");
             }
-        } else {
-            System.out.println("指定された書籍は見つかりませんでした。" + "\n");
+        } catch (NumberFormatException e) {
+            System.out.println("数字を入力してください。" + "\n");
         }
     }
     public static String dataCheck() {
